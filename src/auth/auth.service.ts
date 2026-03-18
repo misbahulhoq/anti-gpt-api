@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import bcrypt from 'bcryptjs';
 import { AuthRepository } from './auth.repository';
 import { User } from './auth.types';
 
@@ -6,7 +7,13 @@ import { User } from './auth.types';
 export class AuthService {
   constructor(private authRepository: AuthRepository) {}
   async createUser(user: User) {
-    const userWithPassword = await this.authRepository.create(user);
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+
+    const userWithPassword = await this.authRepository.create({
+      ...user,
+      password: hashedPassword,
+    });
+
     const userWithoutPassword = {
       name: userWithPassword.name,
       email: userWithPassword.email,
