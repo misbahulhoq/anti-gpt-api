@@ -9,12 +9,13 @@ import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
-    AuthModule,
+    // Environment variables configuration
+    ConfigModule.forRoot({ isGlobal: true }),
     // Rate limiter
     ThrottlerModule.forRoot([{ ttl: 60, limit: 10 }]),
-    // Environment variables configuration
-    ConfigModule.forRoot(),
+
     DatabaseModule,
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],

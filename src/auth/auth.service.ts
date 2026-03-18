@@ -13,4 +13,9 @@ export class AuthService {
     };
     return userWithoutPassword;
   }
+
+  async getUsers() {
+    const users = await this.authRepository.getUsers();
+    return users;
+  }
 }

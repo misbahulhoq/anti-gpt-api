@@ -7,9 +7,10 @@ export class AuthRepository {
   constructor(@Inject('PG_POOL') private readonly pool: Pool) {}
 
   async create(user: User) {
+    // TODO: hash password
     await this.pool.query(
-      `INSERT INTO users (name, email, password) VALUES ($1, $2, $3)`,
-      [user.name, user.email, user.password],
+      `INSERT INTO users (name, email, password) VALUES ('${user.name}', '${user.email}', '${user.password}')`,
+      // [user.name, user.email, user.password],
     );
 
     return user;
