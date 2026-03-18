@@ -5,7 +5,12 @@ import { User } from './auth.types';
 @Injectable()
 export class AuthService {
   constructor(private authRepository: AuthRepository) {}
-  createUser(user: User) {
-    return this.authRepository.create(user);
+  async createUser(user: User) {
+    const userWithPassword = await this.authRepository.create(user);
+    const userWithoutPassword = {
+      name: userWithPassword.name,
+      email: userWithPassword.email,
+    };
+    return userWithoutPassword;
   }
 }

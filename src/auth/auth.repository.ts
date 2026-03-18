@@ -1,21 +1,22 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { User } from './auth.types';
-import { pool } from 'src/database/pool';
+import { Pool } from 'pg';
 
 @Injectable()
 export class AuthRepository {
-  private readonly users: User[] = [];
+  constructor(@Inject('PG_POOL') private readonly pool: Pool) {}
 
   async create(user: User) {
-    const client = await pool.connect();
-    client.query(
-      `INSERT into users (name, email, password) VALUES ('${user.email}', '${user.email}', '${user.password}')`,
+    await this.pool.query(
+      `INSERT INTO users (name, email, password) VALUES ($1, $2, $3)`,
+      [user.name, user.email, user.password],
     );
-    this.users.push(user);
+
     return user;
   }
 
-  getUsers() {
-    return this.users;
+  async getUsers() {
+    const users = await this.pool.query(`SELECT * from users`);
+    return users;
   }
 }
