@@ -8,9 +8,10 @@ import type { Response } from 'express';
 
 @Catch() //
 export class DatabaseExceptionFilter implements ExceptionFilter {
-  catch(exception: any, host: ArgumentsHost) {
+  catch(exception, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
+    console.log(exception);
     if (exception.code === '23505') {
       return response.status(HttpStatus.CONFLICT).json({
         statusCode: HttpStatus.CONFLICT,

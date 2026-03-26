@@ -8,10 +8,10 @@ export class AuthRepository {
 
   async create(user: User): Promise<User> {
     const result = await this.pool.query(
-      `INSERT INTO users (name, email, password) VALUES ($1, $2, $3)`,
+      `INSERT INTO users (id, name, email, password) VALUES (gen_random_uuid(), $1, $2, $3) RETURNING id, created_at, name, email, is_verified`,
       [user.name, user.email, user.password],
     );
-    return result.rows[0];
+    return result.rows[0] as User;
   }
 
   async getUserByEmail(email: string) {

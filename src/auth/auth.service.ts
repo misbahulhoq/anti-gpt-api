@@ -9,16 +9,12 @@ export class AuthService {
   async createUser(user: User) {
     const hashedPassword = await bcrypt.hash(user.password, 10);
 
-    const userWithPassword = await this.authRepository.create({
+    const createdUser = await this.authRepository.create({
       ...user,
       password: hashedPassword,
     });
 
-    const userWithoutPassword = {
-      name: userWithPassword.name,
-      email: userWithPassword.email,
-    };
-    return userWithoutPassword;
+    return createdUser;
   }
 
   async getUsers() {
