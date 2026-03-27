@@ -1,20 +1,20 @@
 -- CreateTable
 CREATE TABLE "User" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
     "email" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "passwordHash" TEXT NOT NULL,
-    "is_verified" BOOLEAN NOT NULL DEFAULT false,
-    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "is_deleted" BOOLEAN NOT NULL DEFAULT false,
+    "isVerified" BOOLEAN NOT NULL DEFAULT false,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "isDeleted" BOOLEAN NOT NULL DEFAULT false,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "RefreshToken" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
     "tokenHash" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "isUsed" BOOLEAN NOT NULL DEFAULT false,
@@ -26,18 +26,18 @@ CREATE TABLE "RefreshToken" (
 
 -- CreateTable
 CREATE TABLE "EmailVerification" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
     "tokenHash" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
-    "expiresAt" TIMESTAMP(3) NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "expiresAt" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "EmailVerification_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
 CREATE TABLE "PasswordReset" (
-    "id" TEXT NOT NULL,
+    "id" TEXT NOT NULL DEFAULT gen_random_uuid(),
     "tokenHash" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "isUsed" BOOLEAN NOT NULL DEFAULT false,
