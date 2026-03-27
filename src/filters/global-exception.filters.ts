@@ -30,7 +30,6 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       console.error(exception.stack);
     }
 
-    // Default: Send a generic 500 error for anything else
     response.status(status).json({
       statusCode: status,
       message: message,

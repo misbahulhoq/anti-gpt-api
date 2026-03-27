@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { User } from './auth.types';
+import type { User } from './auth.types';
 import { Pool } from 'pg';
 
 @Injectable()
