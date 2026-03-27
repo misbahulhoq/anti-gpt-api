@@ -1,5 +1,10 @@
 export type User = {
-  name: string;
+  id: string;
   email: string;
-  password: string;
+  name: string;
+  passwordHash: string;
+  isVerified: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  isDeleted: boolean;
 };
