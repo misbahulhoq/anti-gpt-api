@@ -7,6 +7,7 @@ import { User } from './auth.types';
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
   @Post('signup')
   @HttpCode(HttpStatus.CREATED)
   async signup(@Body() createUserDto: CreateUserDto): Promise<Partial<User>> {
@@ -16,6 +17,6 @@ export class AuthController {
 
   @Post('/login')
   async login(@Body() loginUserDto: LoginUserDto) {
-    return await this.authService.getUsers();
+    // return await this.authService.getUsers();
   }
 }

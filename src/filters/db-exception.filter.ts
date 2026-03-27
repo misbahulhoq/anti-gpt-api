@@ -6,12 +6,18 @@ import {
 } from '@nestjs/common';
 import type { Response } from 'express';
 
+type PostgresError = {
+  code: string;
+  message: string;
+};
+
 @Catch() //
 export class DatabaseExceptionFilter implements ExceptionFilter {
-  catch(exception, host: ArgumentsHost) {
+  catch(exception: PostgresError, host: ArgumentsHost) {
     const ctx = host.switchToHttp();
     const response = ctx.getResponse<Response>();
-    console.log(exception);
+
+    // exception code 23505 means unique constraint ---> sent by Postgres
     if (exception.code === '23505') {
       return response.status(HttpStatus.CONFLICT).json({
         statusCode: HttpStatus.CONFLICT,
