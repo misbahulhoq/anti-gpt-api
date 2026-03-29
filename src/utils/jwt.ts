@@ -6,5 +6,17 @@ export const generateJwtToken = (
   expiresIn: number,
   secret: string,
 ) => {
-  return jwt.sign(payload, secret, { expiresIn: '7d' });
+  return jwt.sign(payload, secret, { expiresIn: expiresIn });
+};
+
+export const verifyJwtToken = (token: string, secret: string) => {
+  return jwt.verify(token, secret);
+};
+
+export const decodeJwtToken = (token: string) => {
+  return jwt.decode(token);
+};
+
+export const getJwtPayload = (token: string) => {
+  return jwt.decode(token);
 };

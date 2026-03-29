@@ -1,10 +1,14 @@
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 import { Pool } from 'pg';
+import * as fs from 'node:fs';
+
+import path from 'path';
 
 import { AuthRepository } from './auth.repository';
 import { CreateUserDto } from './auth.dto';
 import { generateJwtToken } from 'src/utils/jwt';
+import { sendEmail } from 'src/utils/email-sender';
 
 @Injectable()
 export class AuthService {
@@ -16,6 +20,7 @@ export class AuthService {
     const client = await this.pool.connect();
 
     const userExists = await this.authRepository.getUserByEmail(user.email);
+
     if (userExists) {
       throw new ConflictException('User already exists');
     }
@@ -49,7 +54,24 @@ export class AuthService {
       );
       await client.query('COMMIT');
 
-      console.log(verificationTokenHash);
+      const filePath = path.join(
+        __dirname,
+        'email-verification-template-light.html',
+      );
+      const template = fs.readFileSync(filePath, 'utf8');
+      const verificationUrl =
+        'https://chat.antisolbd.com/verify?token=' + verificationToken;
+
+      const html = template.replaceAll(
+        '{{VERIFICATION_LINK}}',
+        verificationUrl,
+      );
+
+      await sendEmail({
+        to: user.email,
+        subject: 'Verify your email',
+        html: html,
+      });
 
       return createdUser;
     } catch (err) {
@@ -59,4 +81,6 @@ export class AuthService {
       client.release();
     }
   }
+
+  // async verifyUser(verificationToken: string) {}
 }
