@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 
 import type { Request, Response } from 'express';
+import { JsonWebTokenError } from 'jsonwebtoken';
 
 @Catch() //
 @Injectable()
@@ -25,6 +26,9 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       const res = exception.getResponse();
       /* eslint-disable-next-line @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
       message = typeof res === 'string' ? res : (res as any).message;
+    } else if (exception instanceof JsonWebTokenError) {
+      status = HttpStatus.UNAUTHORIZED;
+      message = 'Invalid authentication token.';
     } else if (exception instanceof Error) {
       message = exception.message;
       console.error(exception.stack);

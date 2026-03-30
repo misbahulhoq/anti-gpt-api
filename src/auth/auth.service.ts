@@ -1,4 +1,10 @@
-import { ConflictException, Inject, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  HttpStatus,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import bcrypt from 'bcryptjs';
 import { Pool } from 'pg';
 import * as fs from 'node:fs';
@@ -6,9 +12,10 @@ import * as fs from 'node:fs';
 import path from 'path';
 
 import { AuthRepository } from './auth.repository';
-import { CreateUserDto } from './auth.dto';
-import { generateJwtToken } from 'src/utils/jwt';
+import { CreateUserDto, VerifyEmailDto } from './auth.dto';
+import { generateJwtToken, verifyJwtToken } from 'src/utils/jwt';
 import { sendEmail } from 'src/utils/email-sender';
+import { User } from './auth.types';
 
 @Injectable()
 export class AuthService {
@@ -82,5 +89,30 @@ export class AuthService {
     }
   }
 
-  // async verifyUser(verificationToken: string) {}
+  async verifyEmail(req: VerifyEmailDto) {
+    const client = await this.pool.connect();
+    try {
+      const info = verifyJwtToken(
+        req.token,
+        process.env.VERIFICATION_TOKEN_SECRET as string,
+      );
+
+      console.log(info);
+      const user = await this.authRepository.getUserByEmail(
+        (info as User).email,
+      );
+
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+
+      console.log(user);
+      await client.query('BEGIN');
+    } catch (err) {
+      await client.query('ROLLBACK');
+      throw err;
+    } finally {
+      client.release();
+    }
+  }
 }

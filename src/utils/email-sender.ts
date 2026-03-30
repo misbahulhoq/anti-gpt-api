@@ -7,7 +7,6 @@ const mailTransporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS,
   },
 });
-
 export const sendEmail = async (body: {
   to: string;
   subject: string;

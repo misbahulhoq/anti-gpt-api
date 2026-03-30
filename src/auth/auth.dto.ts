@@ -1,4 +1,4 @@
-import { IsEmail, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsJWT, IsString, MinLength } from 'class-validator';
 import { Transform } from 'class-transformer';
 
 export class CreateUserDto {
@@ -17,6 +17,11 @@ export class CreateUserDto {
   @IsString()
   @MinLength(8)
   password: string;
+}
+
+export class VerifyEmailDto {
+  @IsJWT()
+  token: string;
 }
 
 export class LoginUserDto {
