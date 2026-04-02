@@ -6,6 +6,8 @@ import { APP_GUARD } from '@nestjs/core';
 import { ConfigModule } from '@nestjs/config';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { DatabaseModule } from './database/database.module';
+import { ChatController } from './chat/chat.controller';
+import { ChatService } from './chat/chat.service';
 
 @Module({
   imports: [
@@ -17,7 +19,11 @@ import { DatabaseModule } from './database/database.module';
     DatabaseModule,
     AuthModule,
   ],
-  controllers: [AppController],
-  providers: [AppService, { provide: APP_GUARD, useClass: ThrottlerGuard }],
+  controllers: [AppController, ChatController],
+  providers: [
+    AppService,
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
+    ChatService,
+  ],
 })
 export class AppModule {}

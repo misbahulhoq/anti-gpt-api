@@ -11,6 +11,7 @@ async function bootstrap() {
     new DatabaseExceptionFilter(),
     new GlobalExceptionFilter(),
   );
+  app.enableCors({ origin: true });
   await app.listen(process.env.PORT ?? 3000);
 }
 
