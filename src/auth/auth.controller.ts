@@ -20,7 +20,7 @@ export class AuthController {
     await this.authService.verifyEmail(verifyEmailDto);
   }
 
-  @Post('/login')
+  @Post('login')
   login(@Body() loginUserDto: LoginUserDto) {
     console.log(loginUserDto);
     // return await this.authService.getUsers();

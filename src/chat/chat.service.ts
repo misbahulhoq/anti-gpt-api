@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { GoogleGenAI } from '@google/genai';
 import { Observable } from 'rxjs';
 
@@ -15,10 +15,11 @@ export class ChatService {
 
   temporaryChatStream(prompt: string) {
     return new Observable((subscriber) => {
-      (async () => {
+      const streamFromGemini = async () => {
         try {
           const result = await this.genAI.models.generateContentStream({
-            model: 'gemini-2.5-flash',
+            // model: 'gemini-2.5-flash',
+            model: 'gemma-4-26b-a4b-it',
             contents: prompt,
           });
           for await (const chunk of result) {
@@ -28,29 +29,13 @@ export class ChatService {
           subscriber.next({ data: { done: true } });
           subscriber.complete();
         } catch (error) {
+          console.error('Error communicating with Gemini:', error);
           subscriber.error(error);
+        } finally {
+          subscriber.complete();
         }
-      })();
+      };
+      void streamFromGemini();
     });
   }
-
-  async *tempChatStream(prompt: string): AsyncGenerator<string, void, unknown> {
-    try {
-      const result = await this.genAI.models.generateContentStream({
-        model: 'gemini-2.5-flash',
-        contents: prompt,
-      });
-      for await (const chunk of result) {
-        const text = chunk.text;
-        if (text) yield text;
-      }
-    } catch (error) {
-      console.error('Error communicating with Gemini:', error);
-      throw new InternalServerErrorException(
-        'Failed to generate response stream',
-      );
-    }
-  }
-
-  async temporaryChat() {}
 }

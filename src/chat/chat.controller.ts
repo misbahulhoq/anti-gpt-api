@@ -1,4 +1,4 @@
-import { Body, Controller, Query, Sse } from '@nestjs/common';
+import { Body, Controller, Sse } from '@nestjs/common';
 import { TemporaryChatDto } from './chat.dto';
 import { ChatService } from './chat.service';
 
@@ -7,7 +7,8 @@ export class ChatController {
   constructor(private readonly chatService: ChatService) {}
 
   @Sse('temporary-chat')
-  temporaryChat(@Query('prompt') prompt: string) {
+  temporaryChat(@Body() temporaryChatDto: TemporaryChatDto) {
+    const { prompt } = temporaryChatDto;
     return this.chatService.temporaryChatStream(prompt);
   }
 }
