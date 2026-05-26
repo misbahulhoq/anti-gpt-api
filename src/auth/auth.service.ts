@@ -13,8 +13,8 @@ import path from 'path';
 
 import { AuthRepository } from './auth.repository';
 import { CreateUserDto, VerifyEmailDto } from './auth.dto';
-import { generateJwtToken, verifyJwtToken } from 'src/utils/jwt';
-import { sendEmail } from 'src/utils/email-sender';
+import { generateJwtToken, verifyJwtToken } from '@/utils/jwt';
+import { sendEmail } from '@/utils/email-sender';
 import { User } from './auth.types';
 
 @Injectable()
@@ -23,6 +23,7 @@ export class AuthService {
     private authRepository: AuthRepository,
     @Inject('PG_POOL') private readonly pool: Pool,
   ) {}
+
   async createUser(user: CreateUserDto) {
     const client = await this.pool.connect();
 

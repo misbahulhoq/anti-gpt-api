@@ -1,23 +1,16 @@
-import {
-  IsArray,
-  IsOptional,
-  IsString,
-  MaxLength,
-  MinLength,
-} from 'class-validator';
+import { IsArray, IsString, MaxLength, MinLength } from 'class-validator';
 
 export class TemporaryChatDto {
   @IsString()
   @MinLength(2)
   @MaxLength(100)
-  prompt: string;
+  prompt!: string;
 
   @IsArray()
-  @IsOptional()
-  history?: { role: 'user' | 'assistant'; content: string }[];
+  history!: { role: 'user' | 'model'; content: string }[];
 }
 
 export class TemporaryChaResponseDto {
   @IsString()
-  response: string;
+  response!: string;
 }

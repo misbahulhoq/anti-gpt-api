@@ -10,7 +10,7 @@ export class ChatController {
   @Sse()
   // @HttpStatus.OK
   temporaryChat(@Body() temporaryChatDto: TemporaryChatDto) {
-    const { prompt } = temporaryChatDto;
-    return this.chatService.temporaryChatStream(prompt);
+    const { prompt, history } = temporaryChatDto;
+    return this.chatService.temporaryChatStream({ prompt, history });
   }
 }

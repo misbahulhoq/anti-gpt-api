@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, Content } from '@google/genai';
 import { Observable } from 'rxjs';
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
@@ -13,14 +13,23 @@ export class ChatService {
     this.genAI = ai;
   }
 
-  temporaryChatStream(prompt: string) {
+  temporaryChatStream(body: { prompt: string; history: Content[] }) {
     return new Observable((subscriber) => {
       const streamFromGemini = async () => {
+        const { prompt, history } = body;
+
+        console.log(body);
         try {
+          const contents: Content[] = [
+            ...history,
+            { role: 'user', parts: [{ text: prompt }] },
+          ];
+
+          // const result = await chat.sendMessageStream({ message: prompt });
           const result = await this.genAI.models.generateContentStream({
             // model: 'gemini-2.5-flash',
             model: 'gemma-4-26b-a4b-it',
-            contents: prompt,
+            contents: contents,
           });
           for await (const chunk of result) {
             const text = chunk.text;
