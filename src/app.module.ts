@@ -1,10 +1,11 @@
+import { APP_GUARD } from '@nestjs/core';
+import { ConfigModule } from '@nestjs/config';
 import { Module } from '@nestjs/common';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
+
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { ConfigModule } from '@nestjs/config';
-import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { DatabaseModule } from './database/database.module';
 import { ChatController } from './chat/chat.controller';
 import { ChatService } from './chat/chat.service';
@@ -16,8 +17,8 @@ import { ChatService } from './chat/chat.service';
     // Rate limiter
     ThrottlerModule.forRoot([{ ttl: 60, limit: 10 }]),
 
-    DatabaseModule,
     AuthModule,
+    DatabaseModule,
   ],
   controllers: [AppController, ChatController],
   providers: [
