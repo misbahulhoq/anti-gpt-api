@@ -18,7 +18,6 @@ export class ChatService {
       const streamFromGemini = async () => {
         const { prompt, history } = body;
 
-        console.log(body);
         try {
           const contents: Content[] = [
             ...history,
